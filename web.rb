@@ -28,7 +28,7 @@ def current_temp()
 end
 
 def redirect_to_menu()
-  "<Redirect>http://twimlets.com/menu?Message=Choose%20your%20option%2C%201%20for%20time%2C%202%20for%20temp&Options%5B1%5D=http%3A%2F%2Fdry-shore-9675.herokuapp.com%2Ftime&Options%5B2%5D=http%3A%2F%2Fdry-shore-9675.herokuapp.com%2Ftemp&</Redirect>"
+  "<Redirect>http://twimlets.com/menu?Message=Choose%20your%20option%2C%201%20for%20time%2C%202%20for%20temp&Options%5B1%5D=http%3A%2F%2Fancient-springs-2061.herokuapp.com%2Ftime&Options%5B2%5D=http%3A%2F%2Fancient-springs-2061.herokuapp.com%2Ftemp&</Redirect>"
 end
 
 def insert_response(data)
