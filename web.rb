@@ -4,6 +4,8 @@ require 'rubygems'
 require 'json'
 require 'net/http'
 
+require 'twilio-ruby'
+
 def current_temp()
 
    base_url = "http://api.wunderground.com/api/" + ENV['WU_KEY'] + "/conditions/q/"
@@ -45,4 +47,8 @@ end
 
 get '/temp' do
   insert_response("the current temperature is " + current_temp())
+end
+
+post '/inbound_call' do
+  puts params
 end
