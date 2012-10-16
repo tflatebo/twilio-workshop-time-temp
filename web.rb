@@ -6,10 +6,10 @@ require 'net/http'
 
 require 'twilio-ruby'
 
-def current_temp()
+def current_temp(zip_code)
 
    base_url = "http://api.wunderground.com/api/" + ENV['WU_KEY'] + "/conditions/q/"
-   url = base_url + "CA/San_Francisco.json"
+   url = base_url + zip_code + ".json"
 
    resp = Net::HTTP.get_response(URI.parse(url))
    data = resp.body
@@ -25,7 +25,7 @@ def current_temp()
 
    feels_like = result['current_observation']['feelslike_string']
 
-   return feels_like
+   return result
 
 end
 
@@ -50,9 +50,16 @@ get '/time' do
 end
 
 get '/temp' do
-  insert_response("the current temperature is " + current_temp())
+  insert_response("the current temperature is " + current_temp("55102"))
 end
 
 post '/inbound_call' do
-  insert_response("your zip code is " + params['FromZip'])
+  weather = current_temp(params['FromZip'])
+
+  #puts weather
+
+  location = weather['current_observation']['display_location']['city'] + " " + weather['current_observation']['display_location']['state_name']
+  feels_like = weather['current_observation']['feelslike_string']
+
+  insert_response("current temp in " + location + " feels like "  + feels_like)
 end
