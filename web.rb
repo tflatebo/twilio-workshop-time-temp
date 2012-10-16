@@ -34,6 +34,10 @@ def redirect_to_menu()
 end
 
 def insert_response(data)
+  "<Response><Say>Hello Twilio Caller, " + data + "</Say></Response>"
+end
+
+def insert_response_with_redirect(data)
   "<Response><Say>Hello Twilio Caller, " + data + "</Say>" + redirect_to_menu() + "</Response>"
 end
 
@@ -50,5 +54,5 @@ get '/temp' do
 end
 
 post '/inbound_call' do
-  puts params
+  insert_response("your zip code is " + params['FromZip'])
 end
