@@ -46,20 +46,47 @@ get '/' do
 end
 
 get '/time' do
-  insert_response("the current time is " + Time.new.inspect)
+  response = Twilio::TwiML::Response.new do |r|
+    r.Say "The current time is " + Time.new.inspect, :voice => 'woman'
+  end
+
+  return response.text
 end
 
 get '/temp' do
-  insert_response("the current temperature is " + current_temp("55102"))
-end
-
-post '/inbound_call' do
-  weather = current_temp(params['FromZip'])
-
-  #puts weather
+  weather = current_temp("55406")
 
   location = weather['current_observation']['display_location']['city'] + " " + weather['current_observation']['display_location']['state_name']
   feels_like = weather['current_observation']['feelslike_string']
 
-  insert_response("current temp in " + location + " feels like "  + feels_like)
+  response = Twilio::TwiML::Response.new do |r|
+    r.Say "current temp in " + location + " feels like "  + feels_like, :voice => 'woman'
+  end
+
+  return response.text
+end
+
+post '/inbound_call' do
+
+  if(params['Digits'])
+    weather = current_temp(params['Digits'])
+  else
+    weather = current_temp(params['FromZip'])
+  end
+
+  city_name = weather['current_observation']['display_location']['city'] 
+  state_name = weather['current_observation']['display_location']['state_name']
+  feels_like = weather['current_observation']['feelslike_string']
+
+  response = Twilio::TwiML::Response.new do |r|
+    r.Say "current temp in " + city_name + " " + state_name + " feels like "  + feels_like, :voice => 'woman'
+
+    r.Gather :numDigits => '1', :method => 'post' do |g|
+      g.Say 'Press any key to get the weather for another zip code'
+    end
+
+  end
+
+  return response.text
+
 end
