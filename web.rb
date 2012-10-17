@@ -81,8 +81,8 @@ post '/inbound_call' do
   response = Twilio::TwiML::Response.new do |r|
     r.Say "current temp in " + city_name + " " + state_name + " feels like "  + feels_like, :voice => 'woman'
 
-    r.Gather :numDigits => '1', :method => 'post' do |g|
-      g.Say 'Press any key to get the weather for another zip code'
+    r.Gather :numDigits => '5', :method => 'post' do |g|
+      g.Say 'For weather in another zip code enter it now', :voice => 'woman'
     end
 
   end
