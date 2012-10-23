@@ -52,7 +52,6 @@ end
 def insert_response_with_redirect(data, redirect_uri)
   response = Twilio::TwiML::Response.new do |r|
     r.Say data, :voice => 'woman'
-    #r.Redirect 'http://twimlets.com/menu?Message=Choose%20your%20option%2C%201%20for%20time%2C%202%20for%20temp&amp;Options%5B1%5D=http%3A%2F%2Fancient-springs-2061.herokuapp.com%2Ftime&amp;Options%5B2%5D=http%3A%2F%2Fancient-springs-2061.herokuapp.com%2Ftemp'
     r.Redirect redirect_uri
   end
 
@@ -103,8 +102,6 @@ end
 post '/inbound_sms' do
   if(params['Body'] && params['Body'].size == 5)
     weather = current_weather(params['Body'])
-#  elsif(params['FromZip'] && params['FromZip'].size == 5)
-#    weather = current_weather(params['FromZip'])
   end
 
   response = Twilio::TwiML::Response.new do |r|
