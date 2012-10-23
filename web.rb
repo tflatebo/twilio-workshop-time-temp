@@ -80,7 +80,7 @@ end
 post '/inbound_call' do
   if(params['Digits'] && params['Digits'].size == 5)
     weather = current_weather(params['Digits'])
-  else
+  elsif(params['FromZip'] && params['FromZip'].size == 5)
     weather = current_weather(params['FromZip'])
   end
 
