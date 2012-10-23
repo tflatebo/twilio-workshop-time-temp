@@ -102,7 +102,7 @@ post '/inbound_sms' do
   elsif(params['FromZip'] && params['FromZip'].size == 5)
     weather = current_weather(params['FromZip'])
   else
-    weather = current_weather('55102')
+    weather = current_weather('94110')
   end
 
   twiml = Twilio::TwiML::Response.new do |r|
