@@ -97,19 +97,17 @@ post '/inbound_call' do
 end
 
 post '/inbound_sms' do
-  if(request.body && request.body.size == 5)
+  if(params['Body'] && params['Body'].size == 5)
     weather = current_weather(request.body.read)
   elsif(params['FromZip'] && params['FromZip'].size == 5)
     weather = current_weather(params['FromZip'])
-  else
-    weather = current_weather('94110')
   end
 
   response = Twilio::TwiML::Response.new do |r|
-    if(weather['city'])
+    if(weather && weather['city'])
       r.Sms "In " + weather['city'] + ", " + weather['state'] + " it is " + weather['weather'] + " and feels like "  + weather['feels_like'] + ", this observation was " + weather['time']
     else
-      r.Sms "Text an empty message or a valid zip code for current time and weather conditions"
+      r.Sms "Text a valid zip code for current weather conditions"
     end
   end
 
