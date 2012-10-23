@@ -101,6 +101,9 @@ post '/inbound_call' do
 end
 
 post '/inbound_sms' do
+
+puts request
+
   if(params['Body'] && params['Body'].size == 5)
     weather = current_weather(request.body.read)
   elsif(params['FromZip'] && params['FromZip'].size == 5)
@@ -123,5 +126,6 @@ get '/weather_raw' do
 end
 
 post '/request_raw' do
+  puts request
   return request
 end
