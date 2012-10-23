@@ -126,5 +126,5 @@ get '/weather_raw' do
 end
 
 post '/request_raw' do
-  puts "Raw request: " + request.inspect
+  puts "Request: " + request.inspect
 end
