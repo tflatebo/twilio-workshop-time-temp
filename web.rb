@@ -85,7 +85,11 @@ post '/inbound_call' do
   end
 
   response = Twilio::TwiML::Response.new do |r|
-    r.Say "In " + weather['city'] + ", " + weather['state'] + " it is " + weather['weather'] + " and feels like "  + weather['feels_like'] + ", this observation was " + weather['time']
+    if(weather && weather['city'])
+      r.Say "In " + weather['city'] + ", " + weather['state'] + " it is " + weather['weather'] + " and feels like "  + weather['feels_like'] + ", this observation was " + weather['time'], :voice => 'woman'
+    else
+      r.Say "Invalid Zip Code, try the Internets, Noob", :voice => 'woman'
+    end
 
     r.Gather :numDigits => '5', :method => 'post' do |g|
       g.Say 'For weather in another zip code enter it now', :voice => 'woman'
