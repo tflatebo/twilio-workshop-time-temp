@@ -102,7 +102,7 @@ end
 
 post '/inbound_sms' do
 
-puts request
+puts "Params: " + params.inspect + "\n"
 
   if(params['Body'] && params['Body'].size == 5)
     weather = current_weather(request.body.read)
