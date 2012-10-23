@@ -105,7 +105,7 @@ post '/inbound_sms' do
     weather = current_weather('94110')
   end
 
-  twiml = Twilio::TwiML::Response.new do |r|
+  response = Twilio::TwiML::Response.new do |r|
     if(weather['city'])
       r.Sms "In " + weather['city'] + ", " + weather['state'] + " it is " + weather['weather'] + " and feels like "  + weather['feels_like'] + ", this observation was " + weather['time']
     else
@@ -113,9 +113,13 @@ post '/inbound_sms' do
     end
   end
 
-  twiml.text 
+  response.text 
 end
 
 get '/weather_raw' do
   return current_weather('55102', true)
+end
+
+put 'request_raw' do
+  return request
 end
