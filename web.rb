@@ -17,19 +17,22 @@ def current_weather(zip_code, raw = false)
   # data structure - a hash
   result = JSON.parse(data)
 
+  weather = Hash.new
+
   # if the hash has 'Error' as a key, we raise an error
   if result.has_key? 'Error'
      raise "web service error"
   end
- 
-  weather = Hash.new
 
-  weather['feels_like'] = result['current_observation']['feelslike_f'] + " degrees"
-  weather['city'] = result['current_observation']['display_location']['city'] 
-  weather['state'] = result['current_observation']['display_location']['state_name']
-  weather['weather'] = result['current_observation']['weather']
-  weather['weather'] = result['current_observation']['weather']
-  weather['time'] = result['current_observation']['observation_time']
+
+  if(result.has_key? 'current_observation')
+    weather['feels_like'] = result['current_observation']['feelslike_f'] + " degrees"
+    weather['city'] = result['current_observation']['display_location']['city'] 
+    weather['state'] = result['current_observation']['display_location']['state_name']
+    weather['weather'] = result['current_observation']['weather']
+    weather['weather'] = result['current_observation']['weather']
+    weather['time'] = result['current_observation']['observation_time']
+  end
 
   if(raw)
     return result
@@ -82,7 +85,7 @@ post '/inbound_call' do
   end
 
   response = Twilio::TwiML::Response.new do |r|
-    r.Say "In " + weather['city'] + " it is " + weather['weather'] + " and it feels like "  + weather['feels_like'] + ", this was " + weather['time'], :voice => 'woman'
+    r.Say "In " + weather['city'] + ", " + weather['state'] + " it is " + weather['weather'] + " and feels like "  + weather['feels_like'] + ", this observation was " + weather['time']
 
     r.Gather :numDigits => '5', :method => 'post' do |g|
       g.Say 'For weather in another zip code enter it now', :voice => 'woman'
@@ -91,6 +94,26 @@ post '/inbound_call' do
   end
 
   return response.text
+end
+
+post '/inbound_sms' do
+  if(request.body && request.body.size == 5)
+    weather = current_weather(request.body.read)
+  elsif(params['FromZip'] && params['FromZip'].size == 5)
+    weather = current_weather(params['FromZip'])
+  else
+    weather = current_weather('55102')
+  end
+
+  twiml = Twilio::TwiML::Response.new do |r|
+    if(weather['city'])
+      r.Sms "In " + weather['city'] + ", " + weather['state'] + " it is " + weather['weather'] + " and feels like "  + weather['feels_like'] + ", this observation was " + weather['time']
+    else
+      r.Sms "Text an empty message or a valid zip code for current time and weather conditions"
+    end
+  end
+
+  twiml.text 
 end
 
 get '/weather_raw' do
