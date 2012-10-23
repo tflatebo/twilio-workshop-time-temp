@@ -102,12 +102,12 @@ end
 
 post '/inbound_sms' do
 
-puts "Params: " + params.inspect + "\n"
+puts "Params from request: " + params.inspect + "\n"
 
   if(params['Body'] && params['Body'].size == 5)
     weather = current_weather(request.body.read)
-  elsif(params['FromZip'] && params['FromZip'].size == 5)
-    weather = current_weather(params['FromZip'])
+#  elsif(params['FromZip'] && params['FromZip'].size == 5)
+#    weather = current_weather(params['FromZip'])
   end
 
   response = Twilio::TwiML::Response.new do |r|
@@ -126,5 +126,5 @@ get '/weather_raw' do
 end
 
 post '/request_raw' do
-  return request.inspect
+  puts "Raw request: " + request.inspect
 end
