@@ -6,7 +6,7 @@ require 'net/http'
 
 require 'twilio-ruby'
 
-def current_weather(zip_code, raw)
+def current_weather(zip_code, raw = false)
   base_url = "http://api.wunderground.com/api/" + ENV['WU_KEY'] + "/conditions/q/"
   url = base_url + zip_code + ".json"
 
@@ -24,9 +24,12 @@ def current_weather(zip_code, raw)
  
   weather = Hash.new
 
-  weather['feels_like'] = result['current_observation']['feelslike_string']
+  weather['feels_like'] = result['current_observation']['feelslike_f'] + " degrees"
   weather['city'] = result['current_observation']['display_location']['city'] 
   weather['state'] = result['current_observation']['display_location']['state_name']
+  weather['weather'] = result['current_observation']['weather']
+  weather['weather'] = result['current_observation']['weather']
+  weather['time'] = result['current_observation']['observation_time']
 
   if(raw)
     return result
@@ -62,10 +65,10 @@ get '/time' do
 end
 
 get '/temp' do
-  weather = current_weather("94110")
+  weather = current_weather("55102")
 
   response = Twilio::TwiML::Response.new do |r|
-    r.Say "current temp in " + weather['city'] + " feels like "  + weather['feels_like'], :voice => 'woman'
+    r.Say "In " + weather['city'] + " it is " + weather['weather'] + " and it feels like "  + weather['feels_like'] + ", this was " + weather['time'], :voice => 'woman'
   end
 
   return response.text
@@ -79,7 +82,7 @@ post '/inbound_call' do
   end
 
   response = Twilio::TwiML::Response.new do |r|
-    r.Say "current temp in " + weather['city'] + " " + weather['state'] + " feels like "  + weather['feels_like'], :voice => 'woman'
+    r.Say "In " + weather['city'] + " it is " + weather['weather'] + " and it feels like "  + weather['feels_like'] + ", this was " + weather['time'], :voice => 'woman'
 
     r.Gather :numDigits => '5', :method => 'post' do |g|
       g.Say 'For weather in another zip code enter it now', :voice => 'woman'
@@ -91,5 +94,5 @@ post '/inbound_call' do
 end
 
 get '/weather_raw' do
-  return current_weather('94110')
+  return current_weather('55102', true)
 end
