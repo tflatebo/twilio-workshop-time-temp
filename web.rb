@@ -78,7 +78,7 @@ get '/temp' do
 end
 
 post '/inbound_call' do
-  if(params['Digits'])
+  if(params['Digits'] && params['Digits'].size == 5)
     weather = current_weather(params['Digits'])
   else
     weather = current_weather(params['FromZip'])
