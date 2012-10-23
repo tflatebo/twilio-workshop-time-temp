@@ -120,6 +120,6 @@ get '/weather_raw' do
   return current_weather('55102', true)
 end
 
-put 'request_raw' do
+put '/request_raw' do
   return request
 end
