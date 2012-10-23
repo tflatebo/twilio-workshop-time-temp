@@ -104,7 +104,7 @@ post '/inbound_sms' do
 
 puts "Params from request: " + params.inspect + "\n"
 
-  if(params['Body'] && params['Body'].size == 5)
+  if(params['Body'])
     weather = current_weather(request.body.read)
 #  elsif(params['FromZip'] && params['FromZip'].size == 5)
 #    weather = current_weather(params['FromZip'])
