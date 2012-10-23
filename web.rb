@@ -101,11 +101,8 @@ post '/inbound_call' do
 end
 
 post '/inbound_sms' do
-
-puts "Params from request: " + params.inspect + "\n"
-
-  if(params['Body'])
-    weather = current_weather(request.body.read)
+  if(params['Body'] && params['Body'].size == 5)
+    weather = current_weather(params['Body'])
 #  elsif(params['FromZip'] && params['FromZip'].size == 5)
 #    weather = current_weather(params['FromZip'])
   end
@@ -114,7 +111,7 @@ puts "Params from request: " + params.inspect + "\n"
     if(weather && weather['city'])
       r.Sms "In " + weather['city'] + ", " + weather['state'] + " it is " + weather['weather'] + " and feels like "  + weather['feels_like'] + ", this observation was " + weather['time']
     else
-      r.Sms "Text a valid zip code for current weather conditions"
+      r.Sms "Text a valid zip code for current weather conditions - https://www.usps.com/zip4/"
     end
   end
 
